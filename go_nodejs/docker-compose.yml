@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   autopilot:
-    image: kodesurge/autopilot-esp32:latest
+    image: kodesurge/autopilot-go:latest
 
     container_name: autopilot-dev
     privileged: true
@@ -20,5 +20,3 @@ services:
     image: ghcr.io/docling-project/docling-rs-serve:latest
     ports:
       - "5001:5001"
-
-
