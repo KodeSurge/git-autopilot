@@ -50,15 +50,12 @@ cd /your/workspace
 # Clone the repository
 git clone https://github.com/KodeSurge/git-autopilot.git
 
-# Navigate into the specific hardware directory (Example: ESP32)
-cd git-autopilot/esp32
-
-# Start the Docker container in detached mode
-docker compose up -d
+# Launch the desired environment (automatically stops any running environment)
+cd git-autopilot
+./start.sh esp32
 ```
 
-*Note: Replace `esp32` with `esp8266` or other directories as needed.*
-
+*Available environments: `esp32`, `esp8266`, `go_nodejs`, `android`*
 ### 3. Initial Configuration (Web UI)
 
 1.  Open your browser and navigate to:
