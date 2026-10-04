@@ -12,6 +12,8 @@ The project is organized by hardware/development platform. Each folder contains 
 | :--- | :--- | :--- |
 | `esp32/` | Configuration and tooling for ESP32 development | ✅ Active |
 | `esp8266/` | Configuration and tooling for ESP8266 development | ✅ Active |
+| `go_nodejs/` | Configuration and tooling for Go/Node.js development | ✅ Active |
+| `android/` | Configuration and tooling for Android development | ✅ Active |
 | `...` | *(More platforms coming soon)* | 🚧 Planned |
 
 ## 🛠️ Prerequisites
