@@ -56,7 +56,38 @@ cd git-autopilot
 ```
 
 *Available environments: `esp32`, `esp8266`, `go_nodejs`, `android`*
-### 3. Initial Configuration (Web UI)
+
+> **Tip:** After the first successful start, the environment is remembered. You can simply run `./start.sh` without arguments to restart the last used environment.
+
+### 3. Stop the Environment
+
+To stop a running environment:
+
+```bash
+./stop.sh
+```
+
+This will stop the `autopilot-dev` container and any associated `docling` containers. If no environment is running, it will report accordingly.
+
+### 4. Upgrade the Environment
+
+To sync the repository to the latest version and update the running environment:
+
+```bash
+./upgrade.sh
+# Or specify a particular environment:
+./upgrade.sh esp32
+```
+
+This script performs three steps:
+
+1. **Sync repo** — Runs `git pull` to update the repository to the latest commit.
+2. **Pull images** — Runs `docker compose pull` to fetch the latest Docker images for the target environment.
+3. **Restart service** — If the environment is currently running, it restarts the service with the updated images. If not running, it prompts you to start it with `./start.sh`.
+
+> **Tip:** Like `start.sh`, if no argument is given, `upgrade.sh` uses the last environment recorded by `start.sh`.
+
+### 5. Initial Configuration (Web UI)
 
 1.  Open your browser and navigate to:
     ```
