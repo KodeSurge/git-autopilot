@@ -6,18 +6,33 @@ VALID_ENVS=("esp32" "esp8266" "go_nodejs" "android")
 
 # Get script directory (repo root)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LAST_ENV_FILE="$SCRIPT_DIR/.last_env"
 
 # Usage
 usage() {
-    echo "Usage: $0 <environment>"
+    echo "Usage: $0 [environment]"
     echo "Available environments: ${VALID_ENVS[*]}"
+    if [ -f "$LAST_ENV_FILE" ]; then
+        echo "Last used environment: $(cat "$LAST_ENV_FILE")"
+    fi
+    echo ""
+    echo "If no argument is given, the last used environment will be started."
     exit 1
 }
 
-# Check argument
-[ $# -eq 0 ] && usage
-
-TARGET_ENV="$1"
+# Determine target environment
+if [ $# -eq 0 ]; then
+    # No argument provided, use last environment
+    if [ -f "$LAST_ENV_FILE" ]; then
+        TARGET_ENV="$(cat "$LAST_ENV_FILE")"
+        echo "No argument provided, using last environment: $TARGET_ENV"
+    else
+        echo "No argument provided and no last environment found."
+        usage
+    fi
+else
+    TARGET_ENV="$1"
+fi
 
 # Validate environment
 VALID=0
@@ -27,7 +42,7 @@ for env in "${VALID_ENVS[@]}"; do
         break
     fi
 done
-[ "$VALID" -eq 0 ] && usage
+[ "$VALID" -eq 0 ] && { echo "Invalid environment: $TARGET_ENV"; usage; }
 
 # Check if autopilot-dev container is running
 if docker ps -q --filter "name=autopilot-dev" | grep -q .; then
@@ -50,6 +65,9 @@ fi
 echo "Starting environment: $TARGET_ENV"
 cd "$SCRIPT_DIR/$TARGET_ENV"
 docker compose up -d
+
+# Save last used environment
+echo "$TARGET_ENV" > "$LAST_ENV_FILE"
 
 echo ""
 echo "Environment '$TARGET_ENV' is now running."
