@@ -18,7 +18,7 @@ ESP32_COMPOSE = os.path.join(REPO_ROOT, "esp32", "docker-compose.yml")
 ESP8266_COMPOSE = os.path.join(REPO_ROOT, "esp8266", "docker-compose.yml")
 ANDROID_COMPOSE = os.path.join(REPO_ROOT, "android", "docker-compose.yml")
 
-EXPECTED_DCLING_IMAGE = "ghcr.io/docling-project/docling-rs-serve:latest"
+EXPECTED_DCLING_IMAGE = "ghcr.io/docling-project/docling-rs-serve:2.8"
 EXPECTED_DCLING_PORTS = ["5001:5001"]
 
 
