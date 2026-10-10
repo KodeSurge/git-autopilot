@@ -17,6 +17,6 @@ services:
           memory: 4G
 
   docling:
-    image: ghcr.io/docling-project/docling-rs-serve:latest
+    image: ghcr.io/docling-project/docling-rs-serve:2.8
     ports:
       - "5001:5001"
