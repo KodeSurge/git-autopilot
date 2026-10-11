@@ -1,0 +1,59 @@
+name: Build and Package
+
+on:
+  push:
+    tags:
+      - 'v*'
+  pull_request:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - goos: linux
+            binary: xssh
+            archive: xssh-linux-amd64.zip
+          - goos: windows
+            binary: xssh.exe
+            archive: xssh-windows-amd64.zip
+          - goos: darwin
+            binary: xssh
+            archive: xssh-darwin-amd64.zip
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Build
+        run: |
+          mkdir -p build/bin
+          GOOS=${{ matrix.goos }} GOARCH=amd64 go build -ldflags "-s -w" -o build/bin/${{ matrix.binary }} .
+          # Copy resources into the build directory so packaging includes them
+          cp -r resources build/bin/resources
+
+      - name: Verify build artifacts
+        working-directory: build/bin
+        run: |
+          echo "=== Build artifacts ==="
+          ls -la
+          test -f "${{ matrix.binary }}" || (echo "ERROR: binary '${{ matrix.binary }}' not found" && exit 1)
+          test -d "resources" || (echo "ERROR: resources/ directory not found" && exit 1)
+          echo "All artifacts verified successfully."
+
+      - name: Package
+        working-directory: build/bin
+        run: |
+          # Use a cross-platform compatible zip approach
+          # On Ubuntu runner, we can use the zip command
+          zip -r "../../${{ matrix.archive }}" "${{ matrix.binary }}" resources/
+          echo "Created ${{ matrix.archive }}"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.archive }}
+          path: ${{ matrix.archive }}
